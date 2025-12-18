@@ -43,13 +43,14 @@ class MainActivity : ComponentActivity() {
                     ?.savedStateHandle
                     ?.getStateFlow<String?>("order_done", null)
                     ?.collectAsState()
+            backStackEntryState?.savedStateHandle?.remove<String?>("order_done")
             Log.i("MainActivity", "onCreate: order done message ${orderDoneMessage?.value}")
             val currentDestination = backStackEntryState?.destination
-            val snackBarHostState = remember { SnackbarHostState() }
+            val snackbarHostState = remember { SnackbarHostState() }
             val scope = rememberCoroutineScope()
             orderDoneMessage?.value?.let { message ->
                 scope.launch {
-                    snackBarHostState.showSnackbar(message = message)
+                    snackbarHostState.showSnackbar(message = message)
                 }
             }
             PanucciTheme {
@@ -78,7 +79,7 @@ class MainActivity : ComponentActivity() {
                         else -> false
                     }
                     PanucciApp(
-                        snackBarHostState = snackBarHostState,
+                        snackBarHostState = snackbarHostState,
                         bottomAppBarItemSelected = selectedItem,
                         onBottomAppBarItemSelectedChange = { item ->
                             navController.navigateSingleTopWithPopUpTo(item)
